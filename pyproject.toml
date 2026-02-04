@@ -5,10 +5,12 @@ description = "CSC_3EL07_TP"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "ipywidgets>=8.1.8",
     "jupyterlab>=4.5.3",
     "matplotlib>=3.10.8",
     "numpy>=2.4.2",
     "pylatexenc>=2.10",
     "qiskit>=2.3.0",
     "qiskit-aer>=0.17.2",
+    "tqdm>=4.67.3",
 ]
