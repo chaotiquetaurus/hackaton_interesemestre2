@@ -3,7 +3,7 @@ name = "hackton_quantique_2k226"
 version = "0.1.0"
 description = "CSC_3EL07_TP"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11.2"
 dependencies = [
     "ipywidgets>=8.1.8",
     "jupyterlab>=4.5.3",
