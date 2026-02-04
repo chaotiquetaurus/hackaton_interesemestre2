@@ -11,14 +11,19 @@ soit uv soit (venv + pip) pour l'environement
    cd hackaton_interesemestre2
    ```
 
-2. Creer le virtual environment et installer les dependances :
+2. Installer graphviz (dependance systeme) :
+   ```bash
+   sudo apt install graphviz
+   ```
+
+3. Creer le virtual environment et installer les dependances :
    ```bash
    python3 -m venv venv
    source venv/bin/activate
    pip install .
    ```
 
-3. Lancer Jupyter Notebook :
+4. Lancer Jupyter Notebook :
    ```bash
    jupyter notebook
    ```

@@ -13,4 +13,5 @@ dependencies = [
     "qiskit>=2.3.0",
     "qiskit-aer>=0.17.2",
     "tqdm>=4.67.3",
+    "graphviz>=0.21",
 ]
