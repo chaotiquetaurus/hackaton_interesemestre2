@@ -8,6 +8,10 @@ Q3
 Q4
 
 Q5
+The first idea was to create a circuit without the dirty qubit and to swap a qubit for which we knew that the measure would give the expected result with it.
 We think immediately at the Deutsh-Jozsa algorithm, particularly at the interference&nce terms which could give some hints about constant/balanced. 
 The product U1U2.U2U1 is either constant or balanced. 
-Idea of using H [louis continue]
+Trying to implemant it, we saw that it would be difficult because we didn't have the Uf gate.
+We wanted to do a similar idea, which mean using the minus created by the anticommute to have a probabilty equal to 0. Therefore, we decided to use U1, U2 and their inverse to create +/- Identity. To have simulatenously |0> and +/-|0>, we used an H gate on the q1 qubit to have a |+> and control differently the q2 qubit like we do to create a bell state.
+Thus, what we have is : t0, |00>; t1, (1/sqrt(2))(|00> + |10>); t2 (after applying C_U2_dagger, U1, U2, C_U1_dagger), (1/sqrt(2))(|00> +/- |10>)
+Writing that on paper made us realize that q1 is on |+> or |-> state, depending whether the product commutate or not. We simply had to apply an H gate again gives us the result that we want after the measure. We then swapped q1 with the dirty qubit to measure the right qubit  in the score cell.
