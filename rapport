@@ -1,7 +1,17 @@
 **Our mind to answer** 
 Q1
+FIRST IDEA
+The first exerxcize is very similar from an exercize sow in the tp the same morning. So naturally our first idea was to copy the idea from the correction,and switch 19 --> 2 through 8 swap gate, then, apply th eclassic modification to create a bell+ state, i.e, a Hadamrd gate and a cx gate.
+But the test verify that at the end 1 and 19 are still in their places.
+So we had to switch the gate again from 2 --> 19.
+This is 18 swap gate + H + cx + 18 swap gate, considering a swap gate is 3 cx gate, the depth was very poor.
+
+HOW WE GOT OUR SOLUTION
+By decomposing the swap gate by 3 cx , we saw that for all of the qbits there were 6 cx gate == 2 cx gate, so we replaced all the swap gate by cx gate, used hadamrd on 0.
+The solution is presented in fig.1
 
 Q2
+
 
 Q3
 
