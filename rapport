@@ -1,7 +1,38 @@
 **Our mind to answer** 
 Q1
+FIRST IDEA
+The first exerxcize is very similar from an exercize saw in the tp the same morning. So naturally our first idea was to copy the idea from the correction,and switch 19 --> 2 through 8 swap gate, then, apply th eclassic modification to create a bell+ state, i.e, a Hadamrd gate and a cx gate.
+But the test verify that at the end 1 and 19 are still in their places.
+So we had to switch the gate again from 2 --> 19.
+This is 18 swap gate + H + cx + 18 swap gate, considering a swap gate is 3 cx gate, the depth was very poor.
+
+HOW WE GOT OUR SOLUTION
+By decomposing the swap gate by 3 cx , we saw that for all of the qbits there were 6 cx gate == 2 cx gate, so we replaced all the swap gate by cx gate, used hadamrd on 0.
+The solution is presented in fig.1
+FINAL RESULT : 22
 
 Q2
+The first thing that we saw is that, for each qubit, there was exactly a half of |0> and a half of |1>.
+Also, the state is a superposition of 23 terms, the qubits are entangled and the normative term is 2*sqrt(2) = (sqrt(2))*3.
+We immediately thought about using 3 Hadamard gates and CNOT to link all the qubits to get such a state, with a term with all |1> and another one with all |0>.
+Thus, we tried to see patterns by analyzing the results that we obtained with putting this gates randomly at first, then adapting the circuit.
+Seing how hard the task really was (we sure underestimated how hard it would be) and how we really struggled to just find the solution not nly considering depth, we decided to change completly our strategy.
+.In our first experimentation with that exercize we understood that we had to use rotations gate (to create the superposition of the states) and cx gate to intricate the states.
+.We also analyzed the scoring function and we realized that it could easily give us (with really quick modifications) a weight function
+Giving this two facts we pivoted to a variational algorithm.
+.we kept the idea of layers of rotation of parameters theta,phi,lam and cx
+see the ansatz in fig.2
+#todo, put the picture of fig.2
+We modified the scoring function to give us a weight :
+def loss(qc, params_list, params_obj, psi):
+...
+    return 1 - np.abs(psi.T.conj() @ dm @ psi)[0, 0]
+
+mainly changing tge return (no 0.99^d ) and 1-
+than using the code in the tp we created an optimisation function of our parameter
+
+we then tried changing the number of layers to optimlize the final score, with the number of layers upping the depth but giving us a better precision: finally we found that tree layers was optimized .
+FINAL RESULT : 1.835
 
 Q3
 
@@ -15,3 +46,26 @@ Trying to implemant it, we saw that it would be difficult because we didn't have
 We wanted to do a similar idea, which mean using the minus created by the anticommute to have a probabilty equal to 0. Therefore, we decided to use U1, U2 and their inverse to create +/- Identity. To have simulatenously |0> and +/-|0>, we used an H gate on the q1 qubit to have a |+> and control differently the q2 qubit like we do to create a bell state.
 Thus, what we have is : t0, |00>; t1, (1/sqrt(2))(|00> + |10>); t2 (after applying C_U2_dagger, U1, U2, C_U1_dagger), (1/sqrt(2))(|00> +/- |10>)
 Writing that on paper made us realize that q1 is on |+> or |-> state, depending whether the product commutate or not. We simply had to apply an H gate again gives us the result that we want after the measure. We then swapped q1 with the dirty qubit to measure the right qubit  in the score cell.
+In fact, the value of q2 doesn't matter and we can use the dirty bit to play its role, saving an ancilla bit. We obtain a probability of success of 100% with 4 U gates and only one qubit more than the dirty one.
+
+Q7
+The first difficulty was to get the B out of the phase because it wouldn’t show in the probability otherwise.
+Having a complex with |0> and its conjugate with |1>, our idea was to sum them to create a cos that we could see.
+Thus, we added an Hadamard gate before the U(B) one to create a superposition and have both complex terms.
+To sum these terms, we wanted to change only the |1> by a |0> but this is impossible because it is not reversible.
+Also, the result could not be unitary. The only way to see the cos is by it being a probability when we measure.
+Therefore, we used another Hadamard gate after the U(B) to sum both exponential and have a cos in front of the |0>, and a sin in front of the |1>.
+Thanks to the measurements, we should be able to know with which probability we obtain |0>, this probability being cos(B/100)2.
+We implemanted this idea on the first qubit only at first to see what it would give but the results that we obtained were not satisfying since we had the impression the we always had P(0) = 1.
+We decided to increase our precision by using AI tools which told use that the issue was that B being between 0 and π, B/100 is really small and thus cos(B/100) is nearly 1.
+The AI assistant gave us the idea to do a GHZ circuit such as we get cos(15*B/100) = cos(3*B/20).
+Then, we tried to optimize the results with AI by having the best post treatment to extract B for measurements.
+At best, we obtained a score of 0.471
+
+Q8
+We approached this problem by first identifying it as a quantum state discrimination task of non-orthogonal states, where perfect identification is fundamentally impossible. As an initial step, we did a brief theoretical review to estimate the expected order of magnitude of the optimal success probability, which we found to lie in the range of approximately 0,6 - 0,7 This confirmed that the objective was to maximize the guessing probability rather than attempt exact reconstruction. We then analyzed how the three states differ and observed that their distinguishing information is primarily encoded in small phase and amplitude variations that are lost under direct measurement. To make this information accessible, we applied an initial single-qubit "Ry" rotation. This rotation recenters the cluster so that: state 1 lies mostly on the “low-excitation” side, state 2 is near the decision boundary, state 3 crosses into the opposite lobe.
+We next used entanglement with an ancillary qubit using a CNOT gate, After the RY:State 1 has low |1⟩ population on qubit 0 → qubit 1 stays mostly 0 and States 2 and 3 have higher |1⟩ weight → qubit 1 flips more often So: qubit 1 ≈ binary test: “Is the state closer to state 1 or not?”. This already explains why:state 1 → 0* and states 2 & 3 → 1* .If we removed this, state 1 would collapse into the same bucket as state 2.
+To further distinguish the remaining two states, we applied a "controlled Ry(π)" gate, which is effectively a conditional NOT with phase sensitivity.
+What happens: State 2 has partial |1⟩ on qubit 0 → qubit 2 flips with moderate probability and State 3 has larger |1⟩ weight → qubit 2 flips almost deterministically and State 1 barely activates it at all So qubit 2 answers:“If it’s not state 1, which side of the cluster is it on?” and This is why: state2→01 and state 3 → 10 ; They differ mostly on qubit 2, not qubit 1.
+
+Finally, a second CNOT gate was used to concentrate probability mass onto distinct computational-basis outcomes, making a clear correspondence between each input state and a dominant measurement result that approaches the expected theoretical performance.
