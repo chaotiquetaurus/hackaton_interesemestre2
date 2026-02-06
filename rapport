@@ -9,9 +9,27 @@ This is 18 swap gate + H + cx + 18 swap gate, considering a swap gate is 3 cx ga
 HOW WE GOT OUR SOLUTION
 By decomposing the swap gate by 3 cx , we saw that for all of the qbits there were 6 cx gate == 2 cx gate, so we replaced all the swap gate by cx gate, used hadamrd on 0.
 The solution is presented in fig.1
+FINAL RESULT : 22
 
 Q2
+#TODO PASTE LOUIS PARTS HERE
+Seing how hard the task really was (we sure underestimated how hard it would be) and how we really struggled to just find the solution not nly considering depth, we decided to change completly our strategy.
+.In our first experimentation with that exercize we understood that we had to use rotations gate (to create the superposition of the states) and cx gate to intricate the states.
+.We also analyzed the scoring function and we realized that it could easily give us (with really quick modifications) a weight function
+Giving this two facts we pivoted to a variational algorithm.
+.we kept the idea of layers of rotation of parameters theta,phi,lam and cx
+see the ansatz in fig.2
+#todo, put the picture of fig.2
+We modified the scoring function to give us a weight :
+def loss(qc, params_list, params_obj, psi):
+...
+    return 1 - np.abs(psi.T.conj() @ dm @ psi)[0, 0]
 
+mainly changing tge return (no 0.99^d ) and 1-
+than using the code in the tp we created an optimisation function of our parameter
+
+we then tried changing the number of layers to optimlize the final score, with the number of layers upping the depth but giving us a better precision: finally we found that tree layers was optimized .
+FINAL RESULT : 1.835
 
 Q3
 
