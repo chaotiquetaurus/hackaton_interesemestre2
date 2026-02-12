@@ -35,8 +35,24 @@ we then tried changing the number of layers to optimlize the final score, with t
 FINAL RESULT : 1.835
 
 Q3
+The exercise here was to create a "random state", define here as a state that is the closest to the harr measure on the pauli operator.
+If we try to understant what it means, 
+-with the esperance : one want to create a superposition of state that will be uniform distribution on the bloch sphere. (The summ on X gate ==> uniform for the 0,1 axis, Z +,- etc...)
+So, of course we use rotaion around the bloch sphere (X,Y) with parameter lamda. We debugged by printing the result regarding the espearance, and did not find good resukts. The next idea we had is to chose prime number (actually very high prime number) to break the periodicity (so that a state don't make a full turn)
+-for the variance, we want the state to be dependant, but not to much, so we entangle the state and cherched manually for what would be the best solution (we found good result with 5 layers of  x and y rotation and cx gate)
 
 Q4
+The objective was to identify the "lazy bit" among 4 qubits using an oracle that marks states where all "working bits" are set to 1. The final solution consists of applying Grover's algorithm on a uniform superposition of all 16 possible states, then measuring to deduce which bit is lazy.
+The main problem encountered is the presence of the |1111⟩ state in the search space. For a given lazy_bit i, the oracle marks two states: the target state xix_i
+xi​ where all bits are 1 except the lazy bit at 0, and the |1111⟩ state where all bits are 1. Grover amplifies both states equally, which means we get |1111⟩ about 40-50% of the time, a state that doesn't allow us to identify the lazy bit since no bit is 0.
+We attempted to disfavor |1111⟩  with a few technique (mainly found on internet) but none seemed to work.
+This problem seemed like a "search" problem, so Grover's algorithm came to mind. We thought we could use a phase kickback and amplify all qubits except the lazy one, which suggested a possible O(sqrt n) solution.
+The problem here is when we prepare a solution of all the state, and thanks to grover's algorithm we managed to find all the element in E = {qbits with at least a 1 
+so we switched to a classical-style approach: start with all 1s, then for each bit, flip it to 0, apply the oracle, check iff(x)=0, and either return the bit or reset and continue. This is an O(n) method. It worked perfectly with 8 oracle calls, and Omar improved it to just 4 \
+Here's the idea in the quantum version: start with ∣0⟩∣1111⟩
+∣0⟩∣1111⟩ where ∣0⟩ is the ancilla. Flip one bit (say ∣?0??⟩), apply the oracle to see if it satisfies Uf(x)=1. The ancilla records the result: ∣1⟩ if it's the lazy bit,  ∣0⟩ otherwise. Flip the bit back. If the ancilla is ∣1⟩, leave that bit at 0. If the ancilla is  ∣0⟩, restore it to 1. Repeat for all bits. At the end, the lazy bit is the one left at 0.
+
+![Q4 q-circuit picture](lazy_qc.png)
 
 Q5
 The first idea was to create a circuit without the dirty qubit and to swap a qubit for which we knew that the measure would give the expected result with it.
